@@ -1,7 +1,8 @@
-## Instagram Clone Para Aprendizado
+# Instagram Clone Para Aprendizado
 
->> Features 
-    - Tela de Feeds
-    - Tela de Perfil
-    - Navegação entre telas
-    - Componentes organizados
+> Features
+
+- Tela de Feeds
+- Tela de Perfil
+- Navegação entre telas
+- Componentes organizados
