@@ -1,10 +1,11 @@
 import React from 'react';
 import { View, Text, Button } from 'react-native';
-import { createStackNavigator, createAppContainer, createBottomTabNavigator } from 'react-navigation';
+import { createStackNavigator, createAppContainer, createBottomTabNavigator, createSwitchNavigator } from 'react-navigation';
 import Feed from './Feed';
 import LogoTitle from './src/components/Header';
 import { createMaterialBottomTabNavigator } from "react-navigation-material-bottom-tabs";
 import Icon from 'react-native-vector-icons/Ionicons'
+import { AreaDeslogado } from './src/modules/AreaDeslogado';
 
 const PerfilScreen = props => (
     <View>
@@ -72,6 +73,33 @@ const AreaLogado = createMaterialBottomTabNavigator(
     }
 );
 
-const SistemaDeNavegacao = AreaLogado;
+class AuthScreen extends React.Component {
+    state = { ready: false };
+    componentDidMount(){
+        setTimeout(() => {
+            const hasUserToken = false;
+            this.setState({ ready: true }, ()=>{
+                this.props.navigation.navigate(hasUserToken ? 'Logado' : 'Deslogado');
+            })
+        }, 500);
+    }
+    render(){
+        return(
+            <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
+                <Text>Carregando...</Text>
+            </View>
+        )
+    }
+
+}
+
+const SistemaDeNavegacao = createSwitchNavigator(
+    {
+        Auth: AuthScreen,
+        Deslogado: AreaDeslogado,
+        Logado: AreaLogado
+    },
+    { initialRouteName: 'Auth' }
+)
 
 export default createAppContainer(SistemaDeNavegacao);
