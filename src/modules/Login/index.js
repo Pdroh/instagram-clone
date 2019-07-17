@@ -1,7 +1,9 @@
 import React, { Component } from 'react';
-import { Text, TextInput, StyleSheet, TouchableOpacity, KeyboardAvoidingView } from 'react-native';
+import { Text, TextInput, StyleSheet, TouchableOpacity, KeyboardAvoidingView, AsyncStorage } from 'react-native';
 import PasswordTextBox from '../../components/PasswordTextBox';
 import { Item, Input, Icon, Label } from 'native-base';
+import SpotService from '../../services/SpotService';
+import { FormBuilder } from '../../components/FormBuilder';
 
 export class LoginScreen extends Component {
 
@@ -21,25 +23,56 @@ export class LoginScreen extends Component {
     }
 
     handlerUserLogin = () => {
-        console.warn(this.state)
+
+        SpotService.login({ senha: this.state.senha, login: this.state.login })
+        .then(() => {})
+        .catch(err => { alert("Aconteceu algum bug"); })
+
     }
 
     render(){
         return(
-            <KeyboardAvoidingView style={styles.container} behavior='padding' enabled>
-                <Text style={styles.title}>Instaelum</Text>
+            <KeyboardAvoidingView 
+                style={styles.container}
+                behavior='padding'
+                enabled
+            >
+                <FormBuilder 
+                    fields={[
+                        {
+                            id: 1,
+                            name: 'login',
+                            label: 'Login',
+                            type: 'text',
+                            value: 'pedroh',
+                            syncValidators: [['required', {}, 'Este campo é obrigatório']]
+                        },
+                        {
+                            id: 2,
+                            name: 'idade',
+                            label: 'Idade',
+                            type: 'text',
+                            value: '30',
+                            syncValidators: [['required', {}, 'Este campo é obrigatório']]
+                        }
+                    ]}
+                />
+            </KeyboardAvoidingView>
+
+            // <KeyboardAvoidingView style={styles.container} behavior='padding' enabled>
+            //     <Text style={styles.title}>Instaelum</Text>
                 
-                <Item floatingLabel style={{ marginBottom: 15 }}>
-                    <Label>Usuário</Label>
-                    <Input onChangeText={this.handlerChange('login')} />
-                </Item>
+            //     <Item floatingLabel style={{ marginBottom: 15 }}>
+            //         <Label>Usuário</Label>
+            //         <Input onChangeText={this.handlerChange('login')} />
+            //     </Item>
                 
-                <PasswordTextBox icon="lock" label="Senha" onChangeText={this.handlerChange('senha')} />
+            //     <PasswordTextBox icon="lock" label="Senha" onChangeText={this.handlerChange('senha')} />
                 
-                <TouchableOpacity onPress={this.handlerUserLogin} style={styles.btn}>
-                    <Text style={styles.textColor}>Login</Text>    
-                </TouchableOpacity>    
-            </KeyboardAvoidingView>       
+            //     <TouchableOpacity onPress={this.handlerUserLogin} style={styles.btn}>
+            //         <Text style={styles.textColor}>Login</Text>    
+            //     </TouchableOpacity>    
+            // </KeyboardAvoidingView>       
         );
     }
 }
