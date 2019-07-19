@@ -1,11 +1,11 @@
 import React, { Component } from 'react';
-import { Text, View, ScrollView, ActivityIndicator } from 'react-native';
+import { Text, View, ScrollView, ActivityIndicator, TouchableOpacity } from 'react-native';
 import CardPost from './src/components/CardPost';
 import LogoTitle from './src/components/Header';
 import Icon from 'react-native-vector-icons/Ionicons';
 
 export default class Feed extends Component {
-  
+
   static navigationOptions = {
     headerTitle: <LogoTitle texto={'Feed'} />,
     headerStyle: {
@@ -25,35 +25,61 @@ export default class Feed extends Component {
 
   componentDidMount() {
     fetch("https://instalura-api.herokuapp.com/api/public/fotos/rafael")
-      .then(function(respostaDoServer) {
+      .then(function (respostaDoServer) {
         return respostaDoServer.json();
       })
       .then(respostaConvertida => {
         this.setState({
-          posts : respostaConvertida,
+          posts: respostaConvertida,
           carregando: false
         })
       });
   }
 
-  render(){
+  render() {
 
     if (this.state.carregando) {
       return (
-        <View style={{flex: 1, paddingTop: 20}}>
-          <ActivityIndicator style={{flex: 1}} />
+        <View style={{ flex: 1, paddingTop: 20 }}>
+          <ActivityIndicator style={{ flex: 1 }} />
         </View>
       );
     }
 
-    return(
+    return (
       <ScrollView>
-        
-        {this.state.posts.length ? null : (<Text>Carregando ... </Text>)}
-
-        {this.state.posts.map(function(post){
-          return <CardPost key={post.id} post={post} />;
+        {this.state.posts.map(post => {
+          return (
+            <TouchableOpacity
+              key={post.id}
+              onPress={() => {
+                this.props.navigation.navigate('FeedStackPostInterno', {
+                  postId: post.id,
+                  post: post
+                })  
+              }}
+            >
+              <CardPost key={post.id} post={post} />
+          </TouchableOpacity>
+          )
         })}
+        {/* {this.state.posts.map(post => {
+          return (
+            <TouchableOpacity>
+              key={post.id}
+              onPress={() => {
+                // this.props.navigation.navigate('FeedStackPostInterno', {
+                //   postId: post.id,
+                //   post: post
+                // })  
+              }}
+            >
+           <Text>aaaa</Text>
+            <CardPost key={post.id} post={post} />; 
+            </TouchableOpacity>
+          )
+        })}
+       */}
       </ScrollView>
     )
   }

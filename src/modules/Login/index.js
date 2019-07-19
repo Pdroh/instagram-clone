@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { Text, TextInput, StyleSheet, TouchableOpacity, KeyboardAvoidingView, AsyncStorage } from 'react-native';
 import PasswordTextBox from '../../components/PasswordTextBox';
-import { Item, Input, Icon, Label } from 'native-base';
+import { Item, Input, Icon, Label, View } from 'native-base';
 import SpotService from '../../services/SpotService';
 import { FormBuilder } from '../../components/FormBuilder';
 
@@ -13,7 +13,8 @@ export class LoginScreen extends Component {
 
     state = {
         login: '',
-        senha: ''
+        senha: '',
+        submmited: false
     }
 
     handlerChange = nomeDoCampo => {
@@ -22,10 +23,10 @@ export class LoginScreen extends Component {
         }
     }
 
-    handlerUserLogin = () => {
+    handlerUserLogin = values => {
 
-        SpotService.login({ senha: this.state.senha, login: this.state.login })
-        .then(() => {})
+        SpotService.login({ senha: values.senha, login: values.login })
+        .then(() => { this.props.navigation.navigate('Auth') })
         .catch(err => { alert("Aconteceu algum bug"); })
 
     }
@@ -38,21 +39,30 @@ export class LoginScreen extends Component {
                 enabled
             >
                 <FormBuilder 
+
+                    onSuccess={values => {
+                            this.handlerUserLogin(values)
+                        }
+                    }
+                
                     fields={[
                         {
                             id: 1,
                             name: 'login',
                             label: 'Login',
                             type: 'text',
-                            value: 'pedroh',
-                            syncValidators: [['required', {}, 'Este campo é obrigatório']]
+                            value: 'rafael',
+                            syncValidators: [
+                                ['required', {}, 'Este campo é obrigatório'],
+                                ['minlength', {min: 3}, 'Necessário pelo menos 3 caracteres']
+                            ]
                         },
                         {
                             id: 2,
-                            name: 'idade',
-                            label: 'Idade',
+                            name: 'senha',
+                            label: 'Senha',
                             type: 'text',
-                            value: '30',
+                            value: '123456',
                             syncValidators: [['required', {}, 'Este campo é obrigatório']]
                         }
                     ]}

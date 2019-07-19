@@ -6,16 +6,29 @@ import LogoTitle from './src/components/Header';
 import { createMaterialBottomTabNavigator } from "react-navigation-material-bottom-tabs";
 import Icon from 'react-native-vector-icons/Ionicons'
 import { AreaDeslogado } from './src/modules/AreaDeslogado';
+import { AuthScreen } from './src/modules/Auth';
+import { TokenManager } from './src/infra/TokenManager';
+
+
 
 const PerfilScreen = props => (
     <View>
         <Button title='Ir para Feed' onPress={() => props.navigation.navigate("FeedStackHome")} />
+        <Button title='Sair' onPress={async () => {
+            await TokenManager.removeToken();
+            props.navigation.navigate('Auth');
+        }} />
     </View>       
 )
 
 const FeedStack = createStackNavigator({
     FeedStackHome:{
         screen: Feed
+    },
+    FeedStackPostInterno: {
+        screen: (props) => {
+            return <View><Text>{JSON.stringify(props.navigation.state.params)}</Text></View>
+        }
     }
 })
 
@@ -72,26 +85,6 @@ const AreaLogado = createMaterialBottomTabNavigator(
         barStyle: { backgroundColor: '#00E676' },
     }
 );
-
-class AuthScreen extends React.Component {
-    state = { ready: false };
-    componentDidMount(){
-        setTimeout(() => {
-            const hasUserToken = false;
-            this.setState({ ready: true }, ()=>{
-                this.props.navigation.navigate(hasUserToken ? 'Logado' : 'Deslogado');
-            })
-        }, 500);
-    }
-    render(){
-        return(
-            <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
-                <Text>Carregando...</Text>
-            </View>
-        )
-    }
-
-}
 
 const SistemaDeNavegacao = createSwitchNavigator(
     {

@@ -6,6 +6,13 @@ export const TokenManager =  {
     },
     getToken: async () => {
         return await AsyncStorage.getItem('TOKEN');
+    },
+    hasToken: async () => {
+        const token = await TokenManager.getToken();
+        return Boolean(token);
+    },
+    removeToken: async token => {
+        await AsyncStorage.removeItem('TOKEN')
     }
 }
 
